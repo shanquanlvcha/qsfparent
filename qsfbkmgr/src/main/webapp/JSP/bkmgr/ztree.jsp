@@ -45,6 +45,16 @@
 	<script type="text/javascript" src="../plus/js/ztree/jquery.ztree.core.js"></script>
 	<script type="text/javascript" src="../plus/js/ztree/jquery.ztree.excheck.js"></script>
 	<script type="text/javascript" src="../plus/js/ztree/jquery.ztree.exedit.js"></script>
+
+
+    <script src="../plus/js/content.min.js?v=1.0.0"></script>
+    <script src="../plus/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../plus/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    <script>
+        $(document).ready(function(){setup_draggable();$("#n-columns").on("change",function(){var v=$(this).val();if(v==="1"){var $col=$(".form-body .col-md-12").toggle(true);$(".form-body .col-md-6 .draggable").each(function(i,el){$(this).remove().appendTo($col)});$(".form-body .col-md-6").toggle(false)}else{var $col=$(".form-body .col-md-6").toggle(true);$(".form-body .col-md-12 .draggable").each(function(i,el){$(this).remove().appendTo(i%2?$col[1]:$col[0])});$(".form-body .col-md-12").toggle(false)}});$("#copy-to-clipboard").on("click",function(){var $copy=$(".form-body").clone().appendTo(document.body);$copy.find(".tools, :hidden").remove();$.each(["draggable","droppable","sortable","dropped","ui-sortable","ui-draggable","ui-droppable","form-body"],function(i,c){$copy.find("."+c).removeClass(c).removeAttr("style")});var html=html_beautify($copy.html());$copy.remove();$modal=get_modal(html).modal("show");$modal.find(".btn").remove();$modal.find(".modal-title").html("复制HTML代码");$modal.find(":input:first").select().focus();return false})});var setup_draggable=function(){$(".draggable").draggable({appendTo:"body",helper:"clone"});$(".droppable").droppable({accept:".draggable",helper:"clone",hoverClass:"droppable-active",drop:function(event,ui){$(".empty-form").remove();var $orig=$(ui.draggable);if(!$(ui.draggable).hasClass("dropped")){var $el=$orig.clone().addClass("dropped").css({"position":"static","left":null,"right":null}).appendTo(this);var id=$orig.find(":input").attr("id");if(id){id=id.split("-").slice(0,-1).join("-")+"-"+(parseInt(id.split("-").slice(-1)[0])+1);$orig.find(":input").attr("id",id);$orig.find("label").attr("for",id)}$('<p class="tools col-sm-12 col-sm-offset-3">						<a class="edit-link">编辑HTML<a> | 						<a class="remove-link">移除</a></p>').appendTo($el)}else{if($(this)[0]!=$orig.parent()[0]){var $el=$orig.clone().css({"position":"static","left":null,"right":null}).appendTo(this);$orig.remove()}}}}).sortable()};var get_modal=function(content){var modal=$('<div class="modal" style="overflow: auto;" tabindex="-1">	<div class="modal-dialog"><div class="modal-content"><div class="modal-header"><a type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</a><h4 class="modal-title">编辑HTML</h4></div><div class="modal-body ui-front">	<textarea class="form-control" 	style="min-height: 200px; margin-bottom: 10px;font-family: Monaco, Fixed">'+content+'</textarea><button class="btn btn-success">更新HTML</button></div>				</div></div></div>').appendTo(document.body);return modal};$(document).on("click",".edit-link",function(ev){var $el=$(this).parent().parent();var $el_copy=$el.clone();var $edit_btn=$el_copy.find(".edit-link").parent().remove();var $modal=get_modal(html_beautify($el_copy.html())).modal("show");$modal.find(":input:first").focus();$modal.find(".btn-success").click(function(ev2){var html=$modal.find("textarea").val();if(!html){$el.remove()}else{$el.html(html);$edit_btn.appendTo($el)}$modal.modal("hide");return false})});$(document).on("click",".remove-link",function(ev){$(this).parent().parent().remove()});
+    </script>
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+
 	
 	<SCRIPT type="text/javascript">
 		var setting = {
@@ -134,7 +144,7 @@
 		
 		function editTreeNode(){
 			
-			alert(1)
+			alert(1);
 			/* hideRMenu();
 			var newNode = { name:"修改" + (addCount++)};
 			if (zTree.getSelectedNodes()[0]) {
@@ -143,9 +153,6 @@
 			} else {
 				zTree.addNodes(null, newNode);
 			} */
-			
-			
-			
 			
 			
 		}
@@ -196,48 +203,109 @@ div#rMenu ul li{
 	</style>
  </HEAD>
 
-<BODY>
 <body class="gray-bg">
-    <div class="wrapper wrapper-content  animated fadeInRight article">
-        <div class="row">
-            <div class="col-lg-10 col-lg-offset-1">
-            
-            </div>
-          </div>
-        </div>
-        
+<div class="wrapper wrapper-content">
 
-<div class="content_wrap">
-	<div class="zTreeDemoBackground left">
-		<ul id="treeDemo" class="ztree"></ul>
-	</div>
-	<div class="right">
-	
-	
-	
-		<ul class="info">
-			<li class="title"><h2>实现方法说明</h2>
-				<ul class="list">
-				<li>利用 beforeRightClick / onRightClick 事件回调函数简单实现的右键菜单</li>
-				<li class="highlight_red">Demo 中的菜单比较简陋，你完全可以配合其他自定义样式的菜单图层混合使用</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-	
-	
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="left" style="height: 400px">
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div>
+                </div>
+             </div>
+        </div>
+
+        <div class="col-sm-9">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form role="form" class="form-horizontal m-t">
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">文本框：</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="" class="form-control" placeholder="请输入文本">
+                                <span class="help-block m-b-none">说明文字</span>
+                            </div>
+                        </div>
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">密码框：</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                            </div>
+                        </div>
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">下拉列表：</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="">
+                                    <option>选项 1</option>
+                                    <option>选项 2</option>
+                                    <option>选项 3</option>
+                                    <option>选项 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">文件域：</label>
+                            <div class="col-sm-9">
+                                <input type="file" name="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">纯文本：</label>
+
+                            <div class="col-sm-9">
+                                <p class="form-control-static">这里是纯文字信息</p>
+                            </div>
+                        </div>
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">单选框：
+                            </label>
+
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" checked="" value="option1" id="optionsRadios1" name="optionsRadios">选项1</label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="option2" id="optionsRadios2" name="optionsRadios">选项2</label>
+
+                            </div>
+                        </div>
+                        <div class="form-group draggable">
+                            <label class="col-sm-3 control-label">复选框：</label>
+
+                            <div class="col-sm-9">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="option1" id="inlineCheckbox1">选项1</label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="option2" id="inlineCheckbox2">选项2</label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="option3" id="inlineCheckbox3">选项3</label>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group draggable">
+                            <div class="col-sm-12 col-sm-offset-3">
+                                <button class="btn btn-primary" type="submit">保存内容</button>
+                                <button class="btn btn-white" type="submit">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="rMenu">
-	<ul>
-		<li id="m_add" onclick="addTreeNode();">增加菜单</li>
-		<li id="m_edt" onclick="editTreeNode();">修改菜单</li>
-		<li id="m_del" onclick="removeTreeNode();">删除菜单</li>
-		<!-- 
-		<li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
-		<li id="m_unCheck" onclick="checkTreeNode(false);">unCheck节点</li>
-		<li id="m_reset" onclick="resetTree();">恢复zTree</li>
-		 -->
-	</ul>
+    <ul>
+        <li id="m_add" onclick="addTreeNode();">增加菜单</li>
+        <li id="m_edt" onclick="editTreeNode();">修改菜单</li>
+        <li id="m_del" onclick="removeTreeNode();">删除菜单</li>
+        <!--
+        <li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
+        <li id="m_unCheck" onclick="checkTreeNode(false);">unCheck节点</li>
+        <li id="m_reset" onclick="resetTree();">恢复zTree</li>
+         -->
+    </ul>
 </div>
-</BODY>
-</HTML>
+</body>
