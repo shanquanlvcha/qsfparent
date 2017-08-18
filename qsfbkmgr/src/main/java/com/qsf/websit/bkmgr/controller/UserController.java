@@ -44,6 +44,7 @@ public class UserController {
      * @param result
      * @return
      */
+    
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@Valid User user, BindingResult result, Model model, HttpServletRequest request) {
         try {
